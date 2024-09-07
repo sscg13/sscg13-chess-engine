@@ -256,7 +256,7 @@ int Engine::alphabeta(int depth, int ply, int alpha, int beta, int color,
         }
       }
     } else {
-      int margin = std::max(40, 70 * (depth - ttdepth - improving));
+      int margin = std::max(40, 70 * (depth - ttdepth / 2 - improving));
       if (((nodetype & 1) && (score - margin >= beta)) &&
           (abs(beta) < 27000 && !incheck) && (ply > 0)) {
         return (score + beta) / 2;
