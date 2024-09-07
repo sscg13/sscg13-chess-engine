@@ -165,16 +165,14 @@ int Engine::quiesce(int alpha, int beta, int color, int depth) {
     movcount = Bitboards.generatemoves(color, 1, maxdepth + depth);
   }
 
-  if (depth < 1) {
-    for (int i = 0; i < movcount - 1; i++) {
-      for (int j = i + 1;
-           movestrength(Bitboards.moves[maxdepth + depth][j], color) >
-               movestrength(Bitboards.moves[maxdepth + depth][j - 1], color) &&
-           j > 0;
-           j--) {
-        std::swap(Bitboards.moves[maxdepth + depth][j],
-                  Bitboards.moves[maxdepth + depth][j - 1]);
-      }
+  for (int i = 0; i < movcount - 1; i++) {
+    for (int j = i + 1;
+         movestrength(Bitboards.moves[maxdepth + depth][j], color) >
+             movestrength(Bitboards.moves[maxdepth + depth][j - 1], color) &&
+         j > 0;
+         j--) {
+      std::swap(Bitboards.moves[maxdepth + depth][j],
+                Bitboards.moves[maxdepth + depth][j - 1]);
     }
   }
   for (int i = 0; i < movcount; i++) {
@@ -311,14 +309,14 @@ int Engine::alphabeta(int depth, int ply, int alpha, int beta, int color,
     if (mov == killers[ply][0]) {
       movescore[i] += 20000;
     }
-    /*else if (moves[ply][i] == killers[ply][1]) {
-      movescore[ply][i] += 10000;
+    /*else if (mov == killers[ply][1]) {
+      movescore[i] += 10000;
     }*/
     else if ((mov & 4095) == counter) {
       movescore[i] += 10000;
     }
-    /*if (see_exceeds(moves[ply][i], color, 0)) {
-        movescore[ply][i]+=15000;
+    /*if (Bitboards.see_exceeds(mov, color, 0)) {
+      movescore[i] += 15000;
     }*/
     int j = i;
     while (j > 0 && movescore[j] > movescore[j - 1]) {
